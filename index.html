@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pembersih Teks</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        line-height: 1.6;
+      }
+      textarea {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 20px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: vertical;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 10px;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .output {
+        white-space: pre-wrap;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+      .notification {
+        margin-top: 10px;
+        color: green;
+        font-weight: bold;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Pembersih Teks dari Format</h2>
+    <p>
+      Masukkan teks Anda di bawah ini, lalu klik "Bersihkan Teks" untuk
+      menghapus tanda-tanda seperti `**` dan `###`.
+    </p>
+
+    <textarea id="inputText" placeholder="Masukkan teks di sini..."></textarea>
+    <button onclick="cleanText()">Bersihkan Teks</button>
+
+    <h3>Hasil:</h3>
+    <div id="output" class="output"></div>
+    <button id="copyButton" style="display: none" onclick="copyText()">
+      Copy Text
+    </button>
+    <div id="notification" class="notification">Teks berhasil disalin!</div>
+
+    <script>
+      function cleanText() {
+        const input = document.getElementById("inputText").value;
+
+        // Regex untuk menghapus tanda-tanda yang tidak diperlukan
+        const cleanedText = input
+          .replace(/\*\*/g, "") // Hapus tanda bintang ganda
+          .replace(/###/g, "") // Hapus tanda pagar tiga
+          .replace(/^\d+\.\s*/gm, "") // Hapus angka berurutan seperti "6. "
+          .replace(/^\*\s*/gm, "") // Hapus bintang di awal baris seperti "* "
+          .trim(); // Hilangkan spasi di awal/akhir teks
+
+        // Menampilkan teks yang sudah dibersihkan
+        const outputDiv = document.getElementById("output");
+        outputDiv.innerText = cleanedText;
+
+        // Tampilkan tombol Copy Text
+        const copyButton = document.getElementById("copyButton");
+        if (cleanedText) {
+          copyButton.style.display = "inline-block";
+        } else {
+          copyButton.style.display = "none";
+        }
+
+        // Sembunyikan notifikasi jika sebelumnya sudah muncul
+        document.getElementById("notification").style.display = "none";
+      }
+
+      function copyText() {
+        const outputDiv = document.getElementById("output");
+        const textToCopy = outputDiv.innerText;
+
+        // Salin teks ke clipboard
+        navigator.clipboard
+          .writeText(textToCopy)
+          .then(() => {
+            // Tampilkan notifikasi sukses
+            const notification = document.getElementById("notification");
+            notification.style.display = "block";
+            setTimeout(() => {
+              notification.style.display = "none";
+            }, 3000); // Notifikasi hilang setelah 3 detik
+          })
+          .catch(() => {
+            alert("Gagal menyalin teks. Silakan coba lagi.");
+          });
+      }
+    </script>
+  </body>
+</html>
